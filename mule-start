@@ -1,0 +1,14 @@
+#!/bin/bash
+
+echo "Run Mulesoft"
+
+files=$(shopt -s nullglob dotglob; echo /tmp/apps/*)
+if (( ${#files} ))
+then
+  echo "exists files into apps"
+  cp /tmp/apps/* $MULE_HOME/apps
+else 
+  echo "empty (or does not exist or is a file)"
+fi
+# run mule in background
+$MULE_HOME/bin/mule console
