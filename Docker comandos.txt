@@ -1,0 +1,62 @@
+docker
+docker version
+
+docker ps //Serve para listar todos os containers que estão ativos no momento
+docker ps -a //Mostra todos os containers já criados, até mesmo os que estão parados
+docker ps -q //Mostra todos os codigos dos containers ativos
+
+docker run hello-world
+docker run dockersamples/static-site //Baixa a imagem de um site static e o cmd fica em modo de execução pois o servidor ficar atrelado ao meu cmd.
+docker run -d dockersamples/static-site //Baixa a imagem de um site static e não trava meu cmd ou não atrela meu terminal ao processo desse container.
+docker run -d -p 12345:80 dockersamples/static-site //Atrela a porta 12345 que é a porta fora do container, a porta interna do container 80.
+docker run -d -P dockersamples/static-site //-d não vincula meu cmd na imagem, -P serve para atribuir uma porta aleatória.
+docker run -d -P --name meu-site-estatico dockersample/static-site //A tag --name da nome ao container para ficar mais facil de manipula-lo
+docker run -d -P -e AUTHOR="Douglas Q" dockersamples/static-site //A tag -e atribui valor em uma variável de ambiente
+docker run -it ubuntu // atrela o cmd a imagem do container no qual estou executando o sistema operacional e cria uma nova instancia
+
+docker start codigodocontainer // starta um container que esta parado, mas não atrela o cmd da imagem no meu SO
+docker start -a -i codigodocontainer //A tag -a serve para anexar o container no qual eu quero startar, o -i serve para eu colocar o meu cmd no modo interativo, onde eu possa executar comandos direto do meu terminal do meu SO
+
+docker rm codigodocontainer //Exclui um container da lista dos containers não ativos
+docker rm -f codigodocontainer
+docker container prune //Limpa todos os containers que estão parados
+
+docker images //Mostra todas as imagens no docker
+docker rmi nomedaimagem //Para remover uma imagem do docker
+
+docker stop iddocontainer //Demora 10 segundos para stopar o container
+docker stop -t 0 iddocontainer //Stopa o container em menor tempo possível
+docker stop -t 0 $(docker ps -q) // Stopa todos os containers de uma vez
+
+docker run -v "/var/www" ubuntu //A tag -v cria container ou melhor dizendo, um volume como destino /var/www
+docker run -it -v "C:\Users\leonel.porto\Desktop\projeto_teste:/var/www" ubuntu //A tag -it serve para eu puder editar ou executar algum comando dentro do meu cmd na imagem ubuntu -v serve para eu especificar um caminho para a minha pasta do meu SO
+
+docker run -p 8080:3000 -v "C:\Users\leonel.porto\Desktop\projeto__teste:/var/www" -w "/var/www" node npm start //Flag -w aponta qual é minha pasta que vai executar o projeto.
+
+docker run -d -p 8080:3000 -v "$(pwd):/var/www" -w "/var/www" node npm start //Uma outra forma de executar o volume sem colocar toda a extensão do caminho, usando a função pwd, e o -d para não travar o cmd.
+
+docker inspect idcontainer //Para inspecionar as configurações do container
+
+docker build -f Dockerfile -t leonelp/node . //-f serve se caso eu não coloquei o nome padrão no arquivo Dockerfile, exemplo node.Dockerfile
+
+docker-compose up -d --build //Comando para subir o arquivo docker-compose.yml
+
+docker login //Para acessar meu dockerhub
+docker push leonelp/node //Para subir minha imagem ao dockerhub
+docker pull leonelp/node //Para fazer download da minha imagem no dockerhub
+
+apt-get update && apt-get install -y iputils-ping //Para puder usar o ping dentro do container no ubuntu, -y é para não precisar confirmar.
+hostname -i //Para ver o ip no ubuntu
+
+docker network create --driver bridge minha-rede //Para criar uma rede
+docker network ls //Para visualizar as redes criadas
+docker run -it --name meu-container-de-ubuntu --network minha-rede ubuntu //A tag --name da um nome para o container, --network atrela a rede que eu criei ao container.
+
+docker run -d --name meu-mongo --network minha-rede mongo //-d Libera o meu  terminal, --name da um hostname a meu container, --network coloca ele em uma rede personalizada.
+
+docker run -d -p 8080:3000 --name alura-books --networks minha-rede douglasq/alura-books //Subindo o container alura-books na mesma rede
+docker-compose build //Buildar as imagens do dockerfile atraves do docker-compose
+docker-compose up //starta os containers
+docker-compose ps //Lista os serviços que estão rodando
+docker-compose down //Para os containers e remove
+docker exec -it alura-books-1 ping alura-books-2 //Pinga um container com outro
