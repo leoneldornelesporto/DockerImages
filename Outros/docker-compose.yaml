@@ -9,6 +9,7 @@ volumes:
 services:
   mysql:
     container_name: mysql
+    # build: ./docker/mulesoft
     image: mysql
     restart: always
     environment:
@@ -22,3 +23,27 @@ services:
       - eai-network
     volumes:
       - my-datavolume:/var/lib/mysql
+      
+  redis:
+    container_name: redis
+    image: redis
+    restart: always
+    ports:
+      - 6379:6379
+    networks:
+      - eai-network
+    volumes:
+      - my-datavolume:/var/lib/mysql
+
+  rabbit:
+    container_name: rabbit
+    image: rabbitmq:3-management
+    restart: always
+    environment:
+        - RABBITMQ_DEFAULT_USER=eai
+        - RABBITMQ_DEFAULT_PASS=5ZxZ9hMkySW9
+    ports:
+      - 5672:5672
+      - 8090:15672
+    networks:
+      - eai-network
